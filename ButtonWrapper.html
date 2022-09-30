@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Button click</title>
+    </head>
+    <style>
+        #wrapper{
+        margin-left: 430px;
+        margin-right: 400px;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-size: 15px;
+    }
+    </style>
+    <body>
+        <script>
+            function buttonClick(){
+                btn=document.getElementById("wrapper");
+                btn.textContent='Clicked';
+            }
+        </script>
+        <div id="wrapper">
+            <input type="button" value="Click" onclick="buttonClick()">
+        </div>
+    </body>
+</html>

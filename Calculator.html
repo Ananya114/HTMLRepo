@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Calculator</title>
+    </head>
+    <style>
+        #calculatorBody{
+            width: 280px;
+            height: 320px;
+            margin-left: 370px;
+            margin-right: 350px;
+            margin-top: 30px;
+            background-color: silver;
+            border-radius: 10px;
+            border: 5px;
+            border-color: white;
+            padding: 1px;
+        }
+        #display{
+            text-align: right;
+            width: 250px;
+            height: 40px;
+            border-radius: 5px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            margin-left: 8px;
+            margin-right: 8px;
+            background-color: black;
+            border: 10px;
+            border-color: white;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 15px;
+            color: white;
+            padding-right: 10px;
+            overflow: hidden;
+        }
+        #btn{
+            text-align: center;
+            width: 45px;
+            height: 40px;
+            margin-left: 10px;
+            margin-right: 10px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+        #welcomeText{
+            text-align: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: larger;
+        }
+    </style>
+    <body>
+        <script>
+            class calculator{
+                static input=[];
+                constructor(){
+                    calculator.input=[];
+                    display();
+                }
+            }
+
+            function startApp(){
+                calc=new calculator();
+                display();
+            }
+            function Add(value){
+                if (value<10){
+                    calculator.input.push(value);
+                }
+                else{
+                    switch(value){
+                        case 11: 
+                        calculator.input.push("+");
+                        break;
+                        case 12: 
+                        calculator.input.push("-");
+                        break;
+                        case 13:
+                        calculator.input.push("X");
+                        break;
+                        case 14: 
+                        calculator.input.push("/");
+                        break;
+                    }
+                }
+                
+                display();
+            }
+            function display(){
+                text=(calculator.input).toString();
+                text=text.replaceAll(',','');
+                document.getElementById("displayText").innerHTML=text;
+            }
+            function clearIn(){
+                console.log("In clear");
+                calculator.input.pop();
+                display();
+            }
+            function equal(){
+                console.log("In equal");
+                let index=0;
+                let index2=0;
+                let num1=0;
+                let num2=0;
+                let operation="none";
+                let answer=0;
+                for (let i=0;i<calculator.input.length;i++){
+                    if (Number.isInteger(calculator.input[i]))
+                    index++;
+                    else{
+                        operation=calculator.input[i];
+                        break;
+                    }
+                }
+                for (let i=0;i<index;i++){
+                    num1+=(calculator.input[i]*(Math.pow(10,(index-i-1))));
+                }
+                for (let i=index+1;i<calculator.input.length;i++){
+                    num2=num2+(calculator.input[i]*(Math.pow(10,(calculator.input.length-i-1))));
+                }
+                switch(operation){
+                    case "+": 
+                    answer=(num1+num2);
+                    break;
+                    case "-": 
+                    answer=(num1-num2);
+                    break;
+                    case "X": 
+                    answer=(num1*num2);
+                    break;
+                    case "/": 
+                    answer=(num1/num2);
+                    break;
+                    case "none": 
+                    answer=num1;
+                    break;
+                }
+            document.getElementById("displayText").innerHTML=answer;
+            calculator.input=[];
+            }
+        </script>
+
+        <h2 id="welcomeText">Quick Calculate</h2>
+        <div id="calculatorBody">
+            <div id="display">
+                <h3 id="displayText"> </h3>
+            </div>
+            <input type="button" value="1" id="btn" onclick="Add(1)">
+            <input type="button" value="2" id="btn" onclick="Add(2)">
+            <input type="button" value="3" id="btn" onclick="Add(3)">
+            <input type="button" value="+" id="btn" onclick="Add(11)"><br>
+            <input type="button" value="4" id="btn" onclick="Add(4)">
+            <input type="button" value="5" id="btn" onclick="Add(5)">
+            <input type="button" value="6" id="btn" onclick="Add(6)">
+            <input type="button" value="-" id="btn" onclick="Add(12)"><br>
+            <input type="button" value="7" id="btn" onclick="Add(7)">
+            <input type="button" value="8" id="btn" onclick="Add(8)">
+            <input type="button" value="9" id="btn" onclick="Add(9)">
+            <input type="button" value="X" id="btn" onclick="Add(13)"><br>
+            <input type="button" value="0" id="btn" onclick="Add(0)">
+            <input type="button" value="C" id="btn" onclick="clearIn()">
+            <input type="button" value="=" id="btn" onclick="equal()">
+            <input type="button" value="/" id="btn" onclick="Add(14)">
+        </div>
+
+    </body>
+</html>
