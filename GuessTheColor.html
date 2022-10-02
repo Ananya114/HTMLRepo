@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Guess the color</title>
+</head>
+
+<style>
+    #gameScreen{
+        text-align: center;
+        width: 600px;
+        height: 600px;
+        margin-left: 300px;
+        margin-top: 30px;
+        background-color: grey;
+        border: 5px;
+        border-color: azure;
+    }
+    #top{
+        text-align: center;
+        background-color: turquoise;
+        padding: 5px, 5px, 5px, 5px;
+        border: 1px;
+        border-color: white;
+    }
+    #gameBody{
+        text-align: center;
+        background-color: black;
+        height: 400px;
+        width: 560px;
+        margin-left: 20px;
+        margin-top: 15px;
+        color: white;
+    }
+    #startGamebtn{
+        text-align: center;
+        width: 150px;
+        height: 40px;
+        font-size: 15px;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+    #obtn{
+        width: 170px;
+        height: 90px;
+        margin: 5px;
+    }
+    #tbtn{
+        width: 170px;
+        height: 90px;
+        margin: 5px;
+    }
+    #thbtn{
+        width: 170px;
+        height: 90px;
+        margin: 5px;
+    }
+    #fbtn{
+        width: 170px;
+        height: 90px;
+        margin: 5px;
+    }
+    #fibtn{
+        width: 170px;
+        height: 90px;
+        margin: 5px;
+    }
+    #sbtn{
+        width: 170px;
+        height: 90px;
+        margin: 5px;
+    }
+    #imgscrn{
+        text-align: right;
+    } 
+    #lifeone{
+        text-align: right;
+        width: 20px;
+        height: 20px;
+        visibility: visible;
+    }
+    #lifetwo{
+        text-align: right;
+        width: 20px;
+        height: 20px;
+        visibility: visible;
+    }
+</style>
+
+<script>
+    
+    const color={
+        RED: [255,0,0],
+        PINK: [255,192,203],
+        PURPLE: [99,3,48],
+        VIOLET: [127,0,255],
+        AQUA: [127,255,212],
+        MAROON: [128,0,0],
+        BROWN: [165,42,42],
+        KHAKI: [255,87,51],
+        ORCHID: [255,87,51],
+        WHEAT: [245,222,179],
+        TEAL: [0,128,128],
+        BABYPINK: [244,194,194]
+    }
+    class NewGame{
+        static correctAnswer;
+        static currentColor;
+        static lives;
+        static guesses;
+        constructor(){
+
+            document.getElementById("obtn").style.backgroundColor="rgb(105,105,105)";
+            document.getElementById("tbtn").style.backgroundColor="rgb(105,105,105)";
+            document.getElementById("thbtn").style.backgroundColor="rgb(105,105,105)";
+            document.getElementById("fbtn").style.backgroundColor="rgb(105,105,105)";
+            document.getElementById("fibtn").style.backgroundColor="rgb(105,105,105)";
+            document.getElementById("sbtn").style.backgroundColor="rgb(105,105,105)";
+        }
+        setNewGame(correctAnswer, currentColors){
+            document.getElementById("lifeone").style.visibility="visible";
+            document.getElementById("lifetwo").style.visibility='visible';
+            document.getElementById("startGamebtn").style.visibility='hidden';
+            NewGame.correctAnswer=[];
+            for (let i=0;i<3;i++){
+                NewGame.correctAnswer[i]=correctAnswer[i];
+            }
+            NewGame.currentColors=currentColors;
+            NewGame.lives=2;
+            NewGame.guesses=[2,2];
+        }
+    }
+    function selectRandomColor(){
+        colorList=Object.values(color);
+        return ((colorList[Math.floor(Math.random()*12)]));
+    }
+    function startGame(){
+        newgame=new NewGame();
+        currenColors=[];
+        correctAnswer=selectRandomColor();
+        currenColors.push(correctAnswer);
+        while(currenColors.length<6){
+            tempColor=selectRandomColor();
+            if (!currenColors.includes(tempColor,0))
+            currenColors.push(tempColor);
+        }
+        currenColors=currenColors.sort();
+        newgame.setNewGame(correctAnswer, currenColors);
+        document.getElementById("obtn").style.backgroundColor="rgb("+currenColors[0][0]+","+currenColors[0][1]+","+currenColors[0][2]+")";
+        document.getElementById("tbtn").style.backgroundColor="rgb("+currenColors[1][0]+","+currenColors[1][1]+","+currenColors[1][2]+")";
+        document.getElementById("thbtn").style.backgroundColor="rgb("+currenColors[2][0]+","+currenColors[2][1]+","+currenColors[2][2]+")";
+        document.getElementById("fbtn").style.backgroundColor="rgb("+currenColors[3][0]+","+currenColors[3][1]+","+currenColors[3][2]+")";
+        document.getElementById("fibtn").style.backgroundColor="rgb("+currenColors[4][0]+","+currenColors[4][1]+","+currenColors[4][2]+")";
+        document.getElementById("sbtn").style.backgroundColor="rgb("+currenColors[5][0]+","+currenColors[5][1]+","+currenColors[5][2]+")";
+        document.getElementById("color").innerHTML="RGB("+correctAnswer[0]+","+correctAnswer[1]+","+correctAnswer[2]+")";
+    }
+    function getRGB(domColor){
+        strings1=domColor.split("(");
+        strings2=strings1[1].split(")");
+        strings3=strings2[0].split(",");
+        return [parseInt(strings3[0]), parseInt(strings3[1]), parseInt(strings3[2])];
+    }
+    function checkGuess(btnid){
+        let match=true;
+        selectedColor=document.getElementById(btnid).style.backgroundColor;
+        selectedColorArray=getRGB(selectedColor);
+        if (!((selectedColorArray[0]==NewGame.correctAnswer[0])&&(selectedColorArray[1]==NewGame.correctAnswer[1])&&(selectedColorArray[2]==NewGame.correctAnswer[2])))
+        match=false;
+        if (match){
+            document.getElementById("result").innerHTML="You guessed right!";
+            newgame=new NewGame();
+            document.getElementById("startGamebtn").style.visibility='visible';
+        }
+        else{
+            let lives=NewGame.lives;
+            if (lives==2 && NewGame.guesses[2-lives]>1){
+                NewGame.guesses[2-lives]--;
+                document.getElementById("result").innerHTML="Oops, that's a wrong guess. You have 1 more guess.";
+            }
+            else if (lives==2 && NewGame.guesses[2-lives]==1){
+                NewGame.guesses[2-lives]--;
+                NewGame.lives--;
+                document.getElementById("result").innerHTML="Oops, that's a wrong guess. You have 1 life left.";
+                document.getElementById("lifeone").style.visibility='hidden';
+            }
+            else if (lives==1 && NewGame.guesses[2-lives]>1){
+                NewGame.guesses[2-lives]--;
+                document.getElementById("result").innerHTML="Oops, that's a wrong guess. You have 1 more guess.";
+            }
+            else{
+                NewGame.guesses[2-lives]--;
+                NewGame.lives==0;
+                document.getElementById("result").innerHTML="Oops, that's a wrong guess. You are out of lives.\nGame Over!";
+                document.getElementById("startGamebtn").style.visibility='visible';
+                document.getElementById("lifetwo").style.visibility='hidden';
+                newgame=new NewGame();
+            }
+        }
+    }
+</script>
+<body>
+    <div id="gameScreen">
+        <div id="top">
+            <div id="imgscrn">
+                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOAAAADICAMAAADGDB2IAAAAt1BMVEX////+AwAAAADc3NyBAQArKyt7AQDfAwAJAADU1NTYAwB/f38jIyMvAQAmAQB5eXlbAQD2AwDv7+8cHBw7OzvDAgCgoKDLy8sVAABFRUWoAgAUFBS+vr6Ghob5+fmcAgDqAwA+AQCyAgBhYWFMTEzk5OTLAgA4AQB6YGB/Dw5mFBNtaWluExIkAADFxcV/Xl1NAQBBFRSzoqKBHRx6JyaAb2+VgICLRENcNDMZERGysLBrBwaDc3PFi9L8AAACb0lEQVR4nO3db1cSQRiGcXL5KwgtJQgCFrhsillpZVrf/3OVvvQ8N53xrMwznOt6vT4zPw6vxnGt1eh5iyILq1i88qCKyyaNsM4Le1BxHjhoku0E2OkdhNUT+8qCB3V8AhsK2AAIECBAgAABAgQIECBAgAABAgQIcM+As4Hdp4t6WJcbe9DmqqJBc3Hw+p+64nPsH74Ja9q2B7WXgYPOxKDTa4AAAQIECBAgQIAAAQIECBAgQIAAfQM/xwOKHW0HLjpjuy9Hdl9bgftalvag8jh0kNjRtxtB6DzeoC0m7+wuWqI8cF/5qw+6FYTJ44mwPEBvBi4fsaYgPP3SAGACAQToPIAAnQcQoPMAAnQeQIDOAwjQeQABOg8gQOcBBOg8gACdBxCg8wACdB5AgM4DCNB5APcaWKze290e261Dr3lWVr4WW/ouCKunNwgMi6FV8ePErgy90lxZh6XY0kAQhi+6sx18Kb06YF9sqbsVAhAgQIAAAQIECBAgQIAAAQIECBCgA2BuVxlEzM/X1QLHI7ufl2/tQt/cIH11scDdjdjS+EVAlXzHb70i4IePYoHVbv73GUCAAAECBAgQIECAAAECBAgQIECAAEMrVhO7q6ndUhwJt8TzZ7/EAvPdAGvm5dN/bdp2R+KdudMT+/n7B7HAjnyygfhm9QVQvnR5FhmiAggQYNwAAgQYN4AAAcYNIECAcQMIEGDc9h7YPbUr1bHhvf18zyswm5k93DXrZr//2D9wvf3v+/01F1/dg3nsnVUUwNQDmHoAUw9g6gFMPYCpBzD1AKYewNQDmHoAU2/UEI1i76yihpkotQNel/0Fzccfodr7BcMAAAAASUVORK5CYII=" id="lifeone">
+                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOAAAADICAMAAADGDB2IAAAAt1BMVEX////+AwAAAADc3NyBAQArKyt7AQDfAwAJAADU1NTYAwB/f38jIyMvAQAmAQB5eXlbAQD2AwDv7+8cHBw7OzvDAgCgoKDLy8sVAABFRUWoAgAUFBS+vr6Ghob5+fmcAgDqAwA+AQCyAgBhYWFMTEzk5OTLAgA4AQB6YGB/Dw5mFBNtaWluExIkAADFxcV/Xl1NAQBBFRSzoqKBHRx6JyaAb2+VgICLRENcNDMZERGysLBrBwaDc3PFi9L8AAACb0lEQVR4nO3db1cSQRiGcXL5KwgtJQgCFrhsillpZVrf/3OVvvQ8N53xrMwznOt6vT4zPw6vxnGt1eh5iyILq1i88qCKyyaNsM4Le1BxHjhoku0E2OkdhNUT+8qCB3V8AhsK2AAIECBAgAABAgQIECBAgAABAgQIcM+As4Hdp4t6WJcbe9DmqqJBc3Hw+p+64nPsH74Ja9q2B7WXgYPOxKDTa4AAAQIECBAgQIAAAQIECBAgQIAAfQM/xwOKHW0HLjpjuy9Hdl9bgftalvag8jh0kNjRtxtB6DzeoC0m7+wuWqI8cF/5qw+6FYTJ44mwPEBvBi4fsaYgPP3SAGACAQToPIAAnQcQoPMAAnQeQIDOAwjQeQABOg8gQOcBBOg8gACdBxCg8wACdB5AgM4DCNB5APcaWKze290e261Dr3lWVr4WW/ouCKunNwgMi6FV8ePErgy90lxZh6XY0kAQhi+6sx18Kb06YF9sqbsVAhAgQIAAAQIECBAgQIAAAQIECBCgA2BuVxlEzM/X1QLHI7ufl2/tQt/cIH11scDdjdjS+EVAlXzHb70i4IePYoHVbv73GUCAAAECBAgQIECAAAECBAgQIECAAEMrVhO7q6ndUhwJt8TzZ7/EAvPdAGvm5dN/bdp2R+KdudMT+/n7B7HAjnyygfhm9QVQvnR5FhmiAggQYNwAAgQYN4AAAcYNIECAcQMIEGDc9h7YPbUr1bHhvf18zyswm5k93DXrZr//2D9wvf3v+/01F1/dg3nsnVUUwNQDmHoAUw9g6gFMPYCpBzD1AKYewNQDmHoAU2/UEI1i76yihpkotQNel/0Fzccfodr7BcMAAAAASUVORK5CYII=" id="lifetwo">
+                </div>
+            <h2 id="gameTitle">Color Color!</h2>
+            <h2 id="color">RGB(0,0,0)</h2><br>
+        </div>
+        <div id="gameBody">
+            <input type="button" value="Start New Game" id="startGamebtn" onclick="startGame()"><br>
+            <input type="button" id="obtn" onclick="checkGuess(id)">
+            <input type="button" id="tbtn" onclick="checkGuess(id)">
+            <input type="button" id="thbtn" onclick="checkGuess(id)"><br>
+            <input type="button" id="fbtn" onclick="checkGuess(id)">
+            <input type="button" id="fibtn" onclick="checkGuess(id)">
+            <input type="button" id="sbtn" onclick="checkGuess(id)"><br>
+            <h2 id="result">Guess the color.</h2>
+        </div>
+    </div>
+</body>

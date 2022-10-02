@@ -5,6 +5,10 @@ function displayDayTime(){
         hours=today.getHours()-12;
         s="PM";
     }
+    else if (today.getHours()==0){
+        hours=12;
+        s="AM";
+    }
     else{
         hours=today.getHours();
         s="AM";
